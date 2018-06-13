@@ -1,28 +1,22 @@
 #include "Player.h"
 
 Player::Player(int playerNumber, int inputMode, sf::Vector2f startPosition)
-{
-	
+{	
 	sf::String fileName = "../Resources/player"+std::to_string(playerNumber)+".png";
 
-
-	// Load texture, set it to the sprite and set what part of the sprite sheet to draw.
-	if (mTexture.loadFromFile(fileName))
-	{
-		// Handle error
-	}
+	mTexture.loadFromFile(fileName);
+	
 	mSpriteSheet.setTexture(mTexture);
 	mSpriteSheet.setTextureRect(sf::IntRect(0, 0, 32, 32));
-
-	// Initialise animation variables.
-	mCurrentKeyFrame = sf::Vector2i(0, 0);
-	mKeyFrameSize = sf::Vector2i(32, 32);
+													  
+	// Initialise animation variables.				  
+	mCurrentKeyFrame = sf::Vector2i(0, 0);			  
+	mKeyFrameSize = sf::Vector2i(32, 32);			  
 	mSpriteSheetWidth = 4;
 	mAnimationSpeed = 0.2f;
 	mKeyFrameDuration = 0.0f;
 
 	//Initiate class variables
-	//mCanKick = true;
 	mNrOfBombs = 1;
 	mLives = 3;
 	mSpeed = 180.0f;
@@ -42,7 +36,7 @@ Player::~Player()
 {
 }
 
-void Player::Update(float dt)
+void Player::update(float dt)
 {
 	if (mLives > 0) // if alive
 	{
@@ -55,28 +49,24 @@ void Player::Update(float dt)
 			mCurrentKeyFrame.y = 1;
 			direction.x += -1.0f * mBlockInDirection[left];	
 			//mBlockInDirection reverses the movement if colliding with block.
-
 		}
 		if (sf::Keyboard::isKeyPressed(mInRight))
 		{
 			mKeyFrameDuration += dt;
 			mCurrentKeyFrame.y = 2;
 			direction.x += 1.0f * mBlockInDirection[right];
-
 		}
 		if (sf::Keyboard::isKeyPressed(mInDown))
 		{
 			mKeyFrameDuration += dt;
 			mCurrentKeyFrame.y = 0;
 			direction.y += 1.0f * mBlockInDirection[down];
-
 		}
 		if (sf::Keyboard::isKeyPressed(mInUp))
 		{
 			mKeyFrameDuration += dt;
 			mCurrentKeyFrame.y = 3;
 			direction.y += -1.0f * mBlockInDirection[up];
-
 		}
 		if (sf::Keyboard::isKeyPressed(mInBomb) && !mBombWasPressed)
 		{
@@ -90,8 +80,6 @@ void Player::Update(float dt)
 			direction *= 0.71f;
 		}
 		
-
-		// move player
 		mSpriteSheet.move(direction * mSpeed * dt);
 
 		// Update animation
@@ -132,7 +120,7 @@ void Player::Update(float dt)
 	// Update all bombs
 	for (int i = 0; i < mNrOfBombs; i++)
 	{
-		mBomb[i].Update(dt);
+		mBomb[i].update(dt);
 	}
 
 }
@@ -153,12 +141,10 @@ void Player::takeDamage()
 	{
 		kill();
 	}
-
 }
 
 void Player::kill()
 {
-	// Kills the player. Not much now but may need more later. 
 	mSpriteSheet.setPosition(-32, -32);
 }
 
@@ -175,7 +161,7 @@ void Player::encounterBlockReset()
 	}
 }
 
-bool Player::canTeleport()
+bool Player::canTeleport() const
 {
 	return mTeleportTime <= 0;
 }
@@ -203,11 +189,6 @@ void Player::explodeBomb(int bombIndex)
 	mBomb[bombIndex].explode();
 }
 
-void Player::fireOnBlock(int bombIndex, int fireIndex, bool isOnBlock)
-{
-	mBomb[bombIndex].fireOnBlock(fireIndex, isOnBlock);
-}
-
 void Player::activatePickup(int type)
 {
 	enum PickupName { range, amount, speed, kick };
@@ -221,7 +202,7 @@ void Player::activatePickup(int type)
 			mNrOfBombs++;
 		break;
 	case speed:
-		if(mSpeed < 180 * pow(1.2,7))
+		if (mSpeed < 180 * pow(1.2, 5))
 			mSpeed *= 1.2f;		
 		break;
 	}	
@@ -238,15 +219,14 @@ int Player::getNrOfFires() const
 	return mBomb[0].getNrOfFires();
 }
 
-// returns the players bound scaled to k
-sf::FloatRect Player::getPlayerGlobalBounds(float k) const
+sf::FloatRect Player::getPlayerGlobalBounds(float scale) const
 {
 	sf::FloatRect tempRect = mSpriteSheet.getGlobalBounds();
 	
-	tempRect.top  += tempRect.height * ((1 - k) / 2);
-	tempRect.left += tempRect.width  * ((1 - k) / 2);
-	tempRect.height *= k;
-	tempRect.width  *= k;
+	tempRect.top  += tempRect.height * ((1 - scale) / 2);
+	tempRect.left += tempRect.width  * ((1 - scale) / 2);
+	tempRect.height *= scale;
+	tempRect.width  *= scale;
 	return tempRect;
 	
 }
@@ -266,6 +246,11 @@ Fire * Player::getFire(int iBomb, int iFire)
 	return mBomb[iBomb].getFire(iFire);
 }
 
+int Player::getLives() const
+{
+	return mLives;
+}
+
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	target.draw(mSpriteSheet, states);
@@ -280,35 +265,35 @@ void Player::setControlStd(int inputMode)
 	switch (inputMode)
 	{
 	case 1:		
-		mInLeft = sf::Keyboard::A;
-		mInUp = sf::Keyboard::W;
+		mInLeft  = sf::Keyboard::A;
+		mInUp    = sf::Keyboard::W;
 		mInRight = sf::Keyboard::D;
-		mInDown = sf::Keyboard::S;
-		mInBomb = sf::Keyboard::Space;
+		mInDown  = sf::Keyboard::S;
+		mInBomb  = sf::Keyboard::Space;
 		break;
 
 	case 2:		
-		mInLeft = sf::Keyboard::Left;
-		mInUp = sf::Keyboard::Up;
+		mInLeft  = sf::Keyboard::Left;
+		mInUp    = sf::Keyboard::Up;
 		mInRight = sf::Keyboard::Right;
-		mInDown = sf::Keyboard::Down;
-		mInBomb = sf::Keyboard::Return;
+		mInDown  = sf::Keyboard::Down;
+		mInBomb  = sf::Keyboard::Return;
 		break;
 
 	case 3:
-		mInLeft = sf::Keyboard::J;
-		mInUp = sf::Keyboard::I;
+		mInLeft  = sf::Keyboard::J;
+		mInUp    = sf::Keyboard::I;
 		mInRight = sf::Keyboard::L;
-		mInDown = sf::Keyboard::K;
-		mInBomb = sf::Keyboard::O;
+		mInDown  = sf::Keyboard::K;
+		mInBomb  = sf::Keyboard::O;
 		break;
 
 	case 4:
-		mInLeft = sf::Keyboard::Numpad4;
-		mInUp = sf::Keyboard::Numpad8;
+		mInLeft  = sf::Keyboard::Numpad4;
+		mInUp    = sf::Keyboard::Numpad8;
 		mInRight = sf::Keyboard::Numpad6;
-		mInDown = sf::Keyboard::Numpad5;
-		mInBomb = sf::Keyboard::Numpad9;
+		mInDown  = sf::Keyboard::Numpad5;
+		mInBomb  = sf::Keyboard::Numpad9;
 		break;
 	}
 }
@@ -327,26 +312,25 @@ void Player::dropBomb()
 sf::Vector2f Player::getCenteredPosition() const
 {
 	sf::Vector2f centeredPosition(0.0f,0.0f);
-	float fmodPosX = std::fmod(mSpriteSheet.getPosition().x, 32);
-	float fmodPosY = std::fmod(mSpriteSheet.getPosition().y, 32);
+	float fmodPosX = std::fmod(mSpriteSheet.getPosition().x, 32.0f);
+	float fmodPosY = std::fmod(mSpriteSheet.getPosition().y, 32.0f);
 
-	if (fmodPosX <= 16)
+	if (fmodPosX <= 16.0f)
 	{
 		centeredPosition.x = mSpriteSheet.getPosition().x - fmodPosX;
 	}
 	else
 	{
-		centeredPosition.x = mSpriteSheet.getPosition().x + 32-fmodPosX;
+		centeredPosition.x = mSpriteSheet.getPosition().x + 32.0f -fmodPosX;
 	}
 
-	if (fmodPosY <= 16)
+	if (fmodPosY <= 16.0f)
 	{
 		centeredPosition.y = mSpriteSheet.getPosition().y - fmodPosY;
 	}
 	else
 	{
-		centeredPosition.y = mSpriteSheet.getPosition().y + 32-fmodPosY;
+		centeredPosition.y = mSpriteSheet.getPosition().y + 32.0f -fmodPosY;
 	}
-
 	return centeredPosition;
 }

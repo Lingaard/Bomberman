@@ -5,14 +5,14 @@
 class Barrel :public Block
 {
 private:
-	Bomb* mBomb;
+	Bomb mBomb;
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 public:
 	Barrel(float xPos, float yPos);
 	virtual~Barrel();
 
-	void Update(float dt);
+	void update(float dt);
 	void explode();
 
 	int getNrOfFires()const;

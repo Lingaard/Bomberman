@@ -8,12 +8,14 @@ int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	srand(static_cast<unsigned int>(time(0)));
-	sf::RenderWindow window(sf::VideoMode(608, 608), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(608, 608), "Bomberman vs project");
+	
 	Game game;
 	Menu menu;
 	bool isPlaying = false;
 
-	int OutPut = 0;
+	int menuOutPut = 0;
+	int gameOutPut = 0;
 	sf::Clock gameTime;
 
 	while (window.isOpen())
@@ -26,40 +28,41 @@ int main()
 		}
 		window.clear();
 
-		if (!isPlaying)
+
+		if (!isPlaying) // In menu
 		{
-			menu.Update(gameTime.restart().asSeconds());
+			menu.update(gameTime.restart().asSeconds());
 			window.draw(menu);
-			OutPut = menu.getOutPut();
-			if (OutPut == -1)
+			menuOutPut = menu.getOutPut();
+			if (menuOutPut == -1)
 			{
 				window.close();
 			}
 			else if (menu.getOutPut() != 0)
 			{
 				menu.resetOutPut();
-				game.startGame("Levels/standard.txt", OutPut);
+				game.startGame("../Resources/Levels/standard.txt", menuOutPut);
+				//game.startGame("../Resources/Levels/lab.txt", menuOutPut);
 				isPlaying = true;
 			}
 		}
-		else
+		else // In game
 		{
-			game.Update(gameTime.restart().asSeconds());
+			game.update(gameTime.restart().asSeconds());
 			window.draw(game);
-			OutPut = game.getWinner();
-			if (OutPut == -1)
+			gameOutPut = game.getWinner();
+			if (gameOutPut == -1)
 			{
 				// Do nothing
 			}
 			else 
 			{
 				isPlaying = false;
-				menu.setWinner(OutPut);
+				menu.setWinner(gameOutPut);
 				game.reset();
 			}
 
 		}
-
 		window.display();
 	}
 }

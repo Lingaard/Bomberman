@@ -1,10 +1,8 @@
 #include "Fire.h"
 
-
 void Fire::extinguish()
 {
-	//mSpriteSheet.setPosition(-32, 32); //Kanske inte behövs om de blir osynliga och icke skadliga.
-	mCurrentKeyFrame.x = mSpriteSheetWidth;
+	mCurrentKeyFrame.x = mSpriteSheetWidth; // Makes fire invisible
 	mOnBlock = false;
 	mIsBurning = false;
 	mIsDeployed = false;
@@ -32,18 +30,13 @@ Fire::Fire(Part part)
 	mAnimationSpeed = mDuration / 7;
 	mKeyFrameDuration = 0.0f;
 	mSheetDirection = 1;
-	
-	// Load texture, set it to the sprite and set what part of the sprite sheet to draw.
-	if (mTexture.loadFromFile("../Resources/Fire.png"))
-	{
-		// Handle error
-	}
-	mSpriteSheet.setTexture(mTexture);
-	mSpriteSheet.setTextureRect(sf::IntRect(mKeyFrameSize.x * mSpriteSheetWidth, mKeyFrameSize.y*mPart, 
-		mKeyFrameSize.x, mKeyFrameSize.y));
-	
-}
 
+	mTexture.loadFromFile("../Resources/Fire.png");
+	mSpriteSheet.setTexture(mTexture);
+	mSpriteSheet.setTextureRect(sf::IntRect(mKeyFrameSize.x * mSpriteSheetWidth, mKeyFrameSize.y*mPart,
+		mKeyFrameSize.x, mKeyFrameSize.y));
+
+}
 
 Fire::~Fire()
 {
@@ -69,11 +62,10 @@ bool Fire::getBlockDestroyer() const
 	return mIsBlockDestroyer;
 }
 
-bool Fire::setFire()
+bool Fire::ignite()
 {
 	if (mOnBlock)
 	{
-		//mSpriteSheet.setPosition(-32,-32);
 		mIsBlockDestroyer = true;
 	}
 	else
@@ -83,7 +75,7 @@ bool Fire::setFire()
 		mKeyFrameDuration = 0.0f;
 		mCurrentKeyFrame.x = 0;
 		mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
-			mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));
+			mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));		
 	}
 	return mOnBlock;
 }
@@ -114,17 +106,17 @@ void Fire::encounterBlock(bool isOnBlock)
 
 sf::FloatRect Fire::getGlobalBounds() const
 {
+	// Slightly scaled to not accidently collide with blocks to the side.
 	sf::FloatRect tempRect = mSpriteSheet.getGlobalBounds();
-	float k = 0.9;
-	tempRect.top += tempRect.height * ((1 - k) / 2);
-	tempRect.left += tempRect.width  * ((1 - k) / 2);
-	tempRect.height *= k;
-	tempRect.width *= k;
-	return tempRect;
-	
+	float scale = 0.9;
+	tempRect.top += tempRect.height * ((1 - scale) / 2);
+	tempRect.left += tempRect.width  * ((1 - scale) / 2);
+	tempRect.height *= scale;
+	tempRect.width *= scale;
+	return tempRect;	
 }
 
-void Fire::Update(float dt)
+void Fire::update(float dt)
 {
 	if (mIsBurning)
 	{
@@ -141,9 +133,6 @@ void Fire::Update(float dt)
 			{
 				extinguish();
 			}
-			// Moves the fire away when animation finishes.
-			//else if (mCurrentKeyFrame.x <= 0)		// Just keeps the fire on repeat.
-			//	mSheetDirection *= -1;
 
 			mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
 				mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));

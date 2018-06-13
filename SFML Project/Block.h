@@ -8,7 +8,6 @@ private:
 	// Class variables
 	bool mSolid;
 
-
 	// Texture variables
 	sf::Texture mTexture;
 	sf::Sprite mSpriteSheet;

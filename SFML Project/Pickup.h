@@ -8,14 +8,12 @@ public:
 	enum PickupName { range, amount, speed, kick};
 private:
 	int mType;
-	bool mDeployed;
 
 	// Texture variables
 	sf::Texture mTexture;
 	sf::Sprite mSpriteSheet;
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-
 	void pickType();
 public:
 	Pickup(sf::Vector2f position);

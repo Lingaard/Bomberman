@@ -5,31 +5,30 @@
 void Barrel::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(getSprite(), states);
-	target.draw(*mBomb, states);
+	target.draw(mBomb, states);
 }
 
 Barrel::Barrel(float xPos, float yPos)
 	:Block("../Resources/Barrel.png", true, xPos, yPos)
 {
-	mBomb = new Bomb(0.0f);
-	mBomb->increaseRange();
-	mBomb->increaseRange();
+	mBomb.setFuseTime(0.1f);
+	mBomb.increaseRange();
+	mBomb.increaseRange();
 }
 
 
 Barrel::~Barrel()
 {
-	delete mBomb;
 }
 
-void Barrel::Update(float dt)
+void Barrel::update(float dt)
 {
-	mBomb->Update(dt);
+	mBomb.update(dt);
 }
 
 void Barrel::explode()
 {
-	mBomb->dropBomb(getPosition());
+	mBomb.dropBomb(getPosition());
 	getSpriteRef().setPosition(-32, -32);
 }
 
@@ -37,11 +36,11 @@ void Barrel::explode()
 
 int Barrel::getNrOfFires() const
 {
-	return mBomb->getNrOfFires();
+	return mBomb.getNrOfFires();
 }
 
 Fire * Barrel::getFire(int iFire)
 {
-	return mBomb->getFire(iFire);
+	return mBomb.getFire(iFire);
 }
 

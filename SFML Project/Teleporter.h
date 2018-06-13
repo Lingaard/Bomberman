@@ -6,7 +6,6 @@ class Teleporter:public Block
 {
 private:
 
-
 public:
 	Teleporter(float xPos = 0.0f, float yPos = 0.0f);
 	~Teleporter();

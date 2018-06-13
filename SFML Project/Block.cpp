@@ -8,26 +8,18 @@ void Block::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 Block::Block(float xPos, float yPos)
 {
-	// Load texture, set it to the sprite and set what part of the sprite sheet to draw.
-	if (mTexture.loadFromFile("../Resources/block.png"))
-	{
-		// Handle error
-	}
+	mTexture.loadFromFile("../Resources/block.png");
 	mSpriteSheet.setTexture(mTexture);
 	mSpriteSheet.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
 	mSolid = true;
 	mSpriteSheet.setPosition(xPos, yPos);
-
 }
 
 Block::Block(std::string texDir, bool solid, float xPos, float yPos)
-{
-	// Load texture, set it to the sprite and set what part of the sprite sheet to draw.
-	if (mTexture.loadFromFile(texDir))
-	{
-		// Handle error
-	}
+{	
+	mTexture.loadFromFile(texDir);
+
 	mSpriteSheet.setTexture(mTexture);
 	mSpriteSheet.setTextureRect(sf::IntRect(0, 0, 32, 32));
 

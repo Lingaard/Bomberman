@@ -11,7 +11,7 @@ private:
 	int mNrOfFires;
 	int mRange;
 	float mFuseTime; // Time from dropping bomb to explosion
-	float mFuse;     // the timer that counts down
+	float mFuse;     // The timer that counts down
 	float mCoolDown;
 	bool mBlownUp;
 	sf::Vector2f mDirection;
@@ -30,21 +30,20 @@ private:
 	void freeMemory();
 public:
 	Bomb();
-	Bomb(int fuse);
-	Bomb(const Bomb& origin);
 	virtual~Bomb();
-	void Update(float dt);
+	void update(float dt);
 
+	void setFuseTime(float time);
 	bool getIsFireDeployed(int index)const;
 	bool getIsFireBlockDestroyer(int index)const;
 	sf::FloatRect getBombGlobalBounds()const;
 	Fire* getFire(int index);
+	int getNrOfFires()const;
+
 	void increaseRange();
 	void explode();
 	void prepExplode(sf::Vector2f position);
 	bool dropBomb(sf::Vector2f position);
-	int getNrOfFires()const;
-	void fireOnBlock(int index, bool isOnBlock);
 };
 
 
