@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "Bomb.h"
+#include "Animation.h"
 
-class Player : public sf::Drawable
+class Player : public Animation
 {
 public: 
 	enum direction { left, up, right, down};
@@ -18,16 +19,6 @@ private:
 	float mTeleportTime;
 	bool mBombWasPressed;
 	float mBlockInDirection[4];
-
-	// Texture variables
-	sf::Texture mTexture;
-	sf::Sprite mSpriteSheet;
-	// Animation variables
-	sf::Vector2i mCurrentKeyFrame;
-	sf::Vector2i mKeyFrameSize;
-	int mSpriteSheetWidth;
-	float mAnimationSpeed;
-	float mKeyFrameDuration;
 
 	// Input variables
 	sf::Keyboard::Key mInLeft;
@@ -52,12 +43,12 @@ public:
 	int getNrOfFires()const;
 	int getLives()const;
 	bool isAlive()const;
-	bool canTeleport() const;
-	sf::FloatRect getPlayerGlobalBounds(float scale = 0.9f)const;
-	sf::FloatRect getBombGlobalBounds(int index)const;
-	sf::Sprite& getSprite();
+	bool canTeleport() const;	
+	sf::FloatRect getBombGlobalBounds(int index)const; //
+	
 	Fire* getFire(int iBomb, int iFire);
 	 
+	
 	void takeDamage();
 	void encounterBlock(int direction);
 	void encounterBlockReset();

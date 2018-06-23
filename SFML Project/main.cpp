@@ -7,9 +7,14 @@
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	std::cout << sizeof(sf::Sprite) << std::endl;
+	std::cout << sizeof(sf::FloatRect) << std::endl;
+
+
 	srand(static_cast<unsigned int>(time(0)));
 	sf::RenderWindow window(sf::VideoMode(608, 608), "Bomberman vs project");
-	
+
 	Game game;
 	Menu menu;
 	bool isPlaying = false;
@@ -17,7 +22,7 @@ int main()
 	int menuOutPut = 0;
 	int gameOutPut = 0;
 	sf::Clock gameTime;
-
+	float dt;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -28,10 +33,10 @@ int main()
 		}
 		window.clear();
 
-
+		dt = gameTime.restart().asSeconds();
 		if (!isPlaying) // In menu
 		{
-			menu.update(gameTime.restart().asSeconds());
+			menu.update(dt);
 			window.draw(menu);
 			menuOutPut = menu.getOutPut();
 			if (menuOutPut == -1)
@@ -48,7 +53,7 @@ int main()
 		}
 		else // In game
 		{
-			game.update(gameTime.restart().asSeconds());
+			game.update(dt);
 			window.draw(game);
 			gameOutPut = game.getWinner();
 			if (gameOutPut == -1)
@@ -63,6 +68,7 @@ int main()
 			}
 
 		}
+
 		window.display();
 	}
 }

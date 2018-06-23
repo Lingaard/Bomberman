@@ -1,6 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
-#include <SFML\Graphics.hpp>
+#include "Graphics.h"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -9,7 +9,7 @@
 #include "Teleporter.h"
 #include "Crate.h"
 #include "Barrel.h"
-class Game : public sf::Drawable
+class Game : public Graphics
 {	
 private:
 	static const int PLAYERCAP = 4;
@@ -31,10 +31,7 @@ private:
 	Pickup** mPickups;
 	int mNrOfPickups;
 	int mCapPickups;
-	
-	// Texture variables
-	sf::Texture mBackgroundTex;
-	sf::Sprite mBackgroundSprite;
+
 
 	// Functions
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;

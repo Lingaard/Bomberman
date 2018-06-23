@@ -2,11 +2,7 @@
 
 Game::Game()
 {
-	if (!mBackgroundTex.loadFromFile("../Resources/background.jpg"))
-	{
-		std::cout << "Background texture failed to load." << std::endl;
-	}
-	mBackgroundSprite.setTexture(mBackgroundTex);	
+	setTexture("../Resources/background.jpg");
 
 	mFont.loadFromFile("../Resources/VCR_OSD_MONO_1.001.ttf");
 	for (int i = 0, pos = 0; i < 4; i++, pos += 3, pos %= 4)
@@ -121,7 +117,7 @@ void Game::loadLevel(std::string levelDir) throw(...)
 
 void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	target.draw(mBackgroundSprite, states);
+	target.draw(getSprite(), states);
 	for (int i = 0; i < mNrOfBlocks; i++)
 	{
 		target.draw(*mBlocks[i], states);
@@ -150,7 +146,7 @@ void Game::centerRect(sf::FloatRect& rect)
 int Game::collidePlayer(int iPlayer, sf::FloatRect other)
 {
 	int direction;
-	sf::FloatRect tempPlayerRect = mPlayer[iPlayer]->getPlayerGlobalBounds();
+	sf::FloatRect tempPlayerRect = mPlayer[iPlayer]->getGlobalBounds();
 	centerRect(tempPlayerRect);
 	centerRect(other);
 
@@ -183,7 +179,7 @@ int Game::collidePlayer(int iPlayer, sf::FloatRect other)
 
 void Game::collideFire(Fire * fire)
 {
-	sf::FloatRect tempFireRect = fire->getGlobalBounds();
+	sf::FloatRect tempFireRect = fire->getGlobalBoundsScaled(0.9f); // Scaled slightly to not falsely collide with walls alongside
 	Crate* checkCrate = nullptr;
 	Barrel* checkBarrel = nullptr;
 
@@ -192,7 +188,7 @@ void Game::collideFire(Fire * fire)
 	{
 		for (int i2Player = 0; i2Player < mNrOfPlayers; i2Player++)	// Second player layer
 		{
-			if (tempFireRect.intersects(mPlayer[i2Player]->getPlayerGlobalBounds(0.7f))) // Collision with fire and player
+			if (tempFireRect.intersects(mPlayer[i2Player]->getGlobalBoundsScaled(0.7f))) // Collision with fire and player
 			{
 				mPlayer[i2Player]->takeDamage();
 				mLives[i2Player].setString(std::to_string(mPlayer[i2Player]->getLives()));
@@ -445,7 +441,7 @@ void Game::checkCollisionPlayerAndBlocks(int iPlayer)
 	mPlayer[iPlayer]->encounterBlockReset();
 	for (int iBlock = 0; iBlock < mNrOfBlocks; iBlock++) // Player and block
 	{
-		if (mPlayer[iPlayer]->getPlayerGlobalBounds().intersects(mBlocks[iBlock]->getGlobalBounds()))
+		if (mPlayer[iPlayer]->getGlobalBoundsScaled().intersects(mBlocks[iBlock]->getGlobalBounds()))
 		{
 			if (mBlocks[iBlock]->getIsSolid())
 			{
@@ -456,8 +452,8 @@ void Game::checkCollisionPlayerAndBlocks(int iPlayer)
 			{
 				teleCheck = dynamic_cast<Teleporter*>(mBlocks[iBlock]);
 				if (teleCheck != nullptr && mPlayer[iPlayer]->canTeleport())
-				{
-					teleCheck->teleport(mPlayer[iPlayer]->getSprite(), mPositionOfTele, mNrOfTele, mBlocks[iBlock]->getPosition());
+				{					
+					mPlayer[iPlayer]->setPosition(teleCheck->teleport(mPositionOfTele, mNrOfTele));
 					mPlayer[iPlayer]->hasTeleported();
 				}
 			}
@@ -469,7 +465,7 @@ void Game::checkCollisionPlayerAndPickups(int iPlayer)
 {
 	for (int iPickup = 0; iPickup < mNrOfPickups; iPickup++)
 	{
-		if (mPlayer[iPlayer]->getPlayerGlobalBounds().intersects(mPickups[iPickup]->getGlobalBounds()))
+		if (mPlayer[iPlayer]->getGlobalBoundsScaled().intersects(mPickups[iPickup]->getGlobalBounds()))
 		{
 			mPlayer[iPlayer]->activatePickup(mPickups[iPickup]->getType());
 			removePickup(iPickup);
@@ -484,12 +480,12 @@ void Game::checkCollisionPlayerAndBombs(int iPlayer)
 		for (int i2Bomb = 0; i2Bomb < mPlayer[i2Player]->getNrOfBombs(); i2Bomb++)
 		{
 			int direction;
-			if (mPlayer[iPlayer]->getPlayerGlobalBounds().intersects(mPlayer[i2Player]->getBombGlobalBounds(i2Bomb)))
+			if (mPlayer[iPlayer]->getGlobalBoundsScaled().intersects(mPlayer[i2Player]->getBombGlobalBounds(i2Bomb)))
 			{
 				direction = collidePlayer(iPlayer, mPlayer[i2Player]->getBombGlobalBounds(i2Bomb));
 
 				// Only collide if outside of bound collides. Prevents collision with bombs just placed.
-				if (!mPlayer[iPlayer]->getPlayerGlobalBounds(0.6f).intersects(mPlayer[i2Player]->getBombGlobalBounds(i2Bomb)))
+				if (!mPlayer[iPlayer]->getGlobalBoundsScaled(0.6f).intersects(mPlayer[i2Player]->getBombGlobalBounds(i2Bomb)))
 					mPlayer[iPlayer]->encounterBlock(direction);
 			}
 		}

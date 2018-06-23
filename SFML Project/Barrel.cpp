@@ -29,7 +29,7 @@ void Barrel::update(float dt)
 void Barrel::explode()
 {
 	mBomb.dropBomb(getPosition());
-	getSpriteRef().setPosition(-32, -32);
+	setPosition(-32, -32);
 }
 
 

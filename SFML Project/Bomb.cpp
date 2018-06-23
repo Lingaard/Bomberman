@@ -2,7 +2,7 @@
 
 void Bomb::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(mSpriteSheet, states);
+	target.draw(getSprite(), states);
 	for (int i = 0; i < mNrOfFires; i++)
 	{
 		target.draw(*mFires[i], states);				
@@ -64,18 +64,15 @@ Bomb::Bomb()
 	mFires[3] = new Fire(Fire::right);
 	mFires[4] = new Fire(Fire::bottom);
 
-	mSpriteSheet.setPosition(-32, -32);
 
-	mTexture.loadFromFile("../Resources/Bomb.png");
-	mSpriteSheet.setTexture(mTexture);
-	mSpriteSheet.setTextureRect(sf::IntRect(0, 0, 32, 32));
+	setPosition(-32, -32);
+	setTexture("../Resources/Bomb.png");
+	setTextureRect(sf::IntRect(0, 0, 32, 32));
 	
 	// Initialise animation variables.
-	mCurrentKeyFrame = sf::Vector2i(0, 0);
-	mKeyFrameSize = sf::Vector2i(32, 32);
-	mSpriteSheetWidth = 4; 
-	mAnimationSpeed = mFuseTime / 7;
-	mKeyFrameDuration = 0.0f;
+	setSpriteSheetWidth(4); 
+	setAnimationSpeed(mFuseTime / 7);
+	
 }
 
 Bomb::~Bomb()
@@ -96,19 +93,7 @@ void Bomb::update(float dt)
 		if (mFuse > 0.0f)
 		{
 			mFuse -= dt;
-
-			// Update animation for bomb
-			mKeyFrameDuration += dt;
-			if (mKeyFrameDuration >= mAnimationSpeed)
-			{
-				mCurrentKeyFrame.x++;
-
-				mCurrentKeyFrame.x %= mSpriteSheetWidth;
-
-				mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
-					mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));
-				mKeyFrameDuration = 0.0f;
-			}
+			updateAnimation(dt);
 		}
 		else if (!mBlownUp)
 		{
@@ -124,7 +109,7 @@ void Bomb::update(float dt)
 void Bomb::explode()
 {
 	mBlownUp = true;
-	mSpriteSheet.setPosition(-32, -32);
+	setPosition(-32, -32);
 
 	mFires[0]->ignite();
 	bool collideWithBlock[4] = { false };
@@ -191,7 +176,7 @@ bool Bomb::dropBomb(sf::Vector2f position)
 	if (mCoolDown <= 0.0f)
 	{
 		dropSuccessful = true;
-		mSpriteSheet.setPosition(position);
+		setPosition(position);
 		mFuse = mFuseTime;
 		mCoolDown = mFuseTime + mFires[0]->getDuration() + 0.2f;
 		prepExplode(position);
@@ -218,11 +203,6 @@ bool Bomb::getIsFireDeployed(int index) const
 bool Bomb::getIsFireBlockDestroyer(int index) const
 {
 	return mFires[index]->getBlockDestroyer();
-}
-
-sf::FloatRect Bomb::getBombGlobalBounds() const
-{
-	return mSpriteSheet.getGlobalBounds();
 }
 
 Fire * Bomb::getFire(int index)

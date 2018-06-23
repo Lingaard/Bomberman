@@ -11,7 +11,7 @@ public:
 	~Teleporter();
 
 	sf::Vector2f getPosition()const;
-	void teleport(sf::Sprite& target, sf::Vector2f telePosArr[], int arrLen, sf::Vector2f doNotTele);
+	sf::Vector2f teleport(sf::Vector2f telePosArr[], int arrLen);
 };
 
 #endif // !TELEPORTER_H

@@ -19,7 +19,7 @@ bool Crate::getHasItem() const
 
 void Crate::destroy()
 {
-	getSpriteRef().setPosition(-32, -32);
+	setPosition(-32, -32);
 }
 
 

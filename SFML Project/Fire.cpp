@@ -2,40 +2,31 @@
 
 void Fire::extinguish()
 {
-	mCurrentKeyFrame.x = mSpriteSheetWidth; // Makes fire invisible
+	setColor(sf::Color(0,0,0,0)); 
 	mOnBlock = false;
 	mIsBurning = false;
 	mIsDeployed = false;
 	mIsBlockDestroyer = false;
 }
 
-void Fire::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(mSpriteSheet, states);
-}
-
 Fire::Fire(Part part)
 {
 	// Initialise class variables
 	mDuration = 1.4f;
+	mTimeLit = mDuration;
 	mPart = part;
 	mIsBurning = false;
 	mOnBlock = false;
 	mIsDeployed = false;
 
 	// Initialise animation variables.
-	mKeyFrameSize = sf::Vector2i(32, 32);
-	mCurrentKeyFrame = sf::Vector2i(0, mPart);
-	mSpriteSheetWidth = 4;
-	mAnimationSpeed = mDuration / 7;
-	mKeyFrameDuration = 0.0f;
-	mSheetDirection = 1;
-
-	mTexture.loadFromFile("../Resources/Fire.png");
-	mSpriteSheet.setTexture(mTexture);
-	mSpriteSheet.setTextureRect(sf::IntRect(mKeyFrameSize.x * mSpriteSheetWidth, mKeyFrameSize.y*mPart,
-		mKeyFrameSize.x, mKeyFrameSize.y));
-
+	setCurrentKeyFrameY(mPart);
+	setSpriteSheetWidth(4);
+	setAnimationSpeed(mDuration / 7);
+	
+	setTexture("../Resources/Fire.png");
+	setTextureRect(sf::IntRect(0, 32*mPart,	32, 32));
+	setColor(sf::Color(0, 0, 0, 0)); // Makes fire invisible
 }
 
 Fire::~Fire()
@@ -70,12 +61,13 @@ bool Fire::ignite()
 	}
 	else
 	{
+		mTimeLit = 0.0f;
+		setColor(sf::Color::White);
 		mIsBurning = true;
-		mSheetDirection = 1;
-		mKeyFrameDuration = 0.0f;
-		mCurrentKeyFrame.x = 0;
-		mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
-			mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));		
+		setKeyFrameDuration(0.0f);
+		setCurrentKeyFrameX(0);
+		/*mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
+			mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));	*/	
 	}
 	return mOnBlock;
 }
@@ -85,8 +77,7 @@ void Fire::prepFire(sf::Vector2f position)
 	mOnBlock = false;
 	mIsDeployed = true;
 	mIsBlockDestroyer = false;
-	mSpriteSheet.setPosition(position);
-	mCurrentKeyFrame.x = mSpriteSheetWidth;
+	setPosition(position);
 }
 
 void Fire::prepFire(int xPos, int yPos)
@@ -104,41 +95,14 @@ void Fire::encounterBlock(bool isOnBlock)
 	mOnBlock = isOnBlock;
 }
 
-sf::FloatRect Fire::getGlobalBounds() const
-{
-	// Slightly scaled to not accidently collide with blocks to the side.
-	sf::FloatRect tempRect = mSpriteSheet.getGlobalBounds();
-	float scale = 0.9;
-	tempRect.top += tempRect.height * ((1 - scale) / 2);
-	tempRect.left += tempRect.width  * ((1 - scale) / 2);
-	tempRect.height *= scale;
-	tempRect.width *= scale;
-	return tempRect;	
-}
-
 void Fire::update(float dt)
 {
 	if (mIsBurning)
 	{
-		mKeyFrameDuration += dt;
-		// Update animation
-		if (mKeyFrameDuration >= mAnimationSpeed)
-		{
-			mCurrentKeyFrame.x += mSheetDirection;
-
-			if (mCurrentKeyFrame.x >= mSpriteSheetWidth - 1)
-				mSheetDirection *= -1;
-
-			else if (mCurrentKeyFrame.x < 0)
-			{
-				extinguish();
-			}
-
-			mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
-				mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));
-
-			mKeyFrameDuration = 0.0f;
-		}
+		mTimeLit += dt;
+		updateAnimationBouncing(dt);
+		if (mTimeLit > mDuration)
+			extinguish();
 	}
 }
 

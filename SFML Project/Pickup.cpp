@@ -1,10 +1,5 @@
 #include "Pickup.h"
 
-void Pickup::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(mSpriteSheet, states);
-}
-
 void Pickup::pickType()
 {
 	int random = rand() % 90 + 1;
@@ -27,11 +22,10 @@ Pickup::Pickup(sf::Vector2f position)
 {
 	pickType();
 
-	mTexture.loadFromFile("../Resources/Pickup.png");
-	mSpriteSheet.setTexture(mTexture);
-	mSpriteSheet.setTextureRect(sf::IntRect(32 * mType, 0, 32, 32));
+	setTexture("../Resources/Pickup.png");
+	setTextureRect(sf::IntRect(32 * mType, 0, 32, 32));
 
-	mSpriteSheet.setPosition(position);
+	setPosition(position);
 }
 
 Pickup::Pickup(float xPos, float yPos)
@@ -41,11 +35,6 @@ Pickup::Pickup(float xPos, float yPos)
 
 Pickup::~Pickup()
 {
-}
-
-sf::FloatRect Pickup::getGlobalBounds() const
-{
-	return mSpriteSheet.getGlobalBounds();
 }
 
 int Pickup::getType()

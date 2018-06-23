@@ -4,20 +4,15 @@ Player::Player(int playerNumber, int inputMode, sf::Vector2f startPosition)
 {	
 	sf::String fileName = "../Resources/player"+std::to_string(playerNumber)+".png";
 
-	mTexture.loadFromFile(fileName);
-	
-	mSpriteSheet.setTexture(mTexture);
-	mSpriteSheet.setTextureRect(sf::IntRect(0, 0, 32, 32));
+	setTexture(fileName);
+	setTextureRect(sf::IntRect(0, 0, 32, 32));
 													  
 	// Initialise animation variables.				  
-	mCurrentKeyFrame = sf::Vector2i(0, 0);			  
-	mKeyFrameSize = sf::Vector2i(32, 32);			  
-	mSpriteSheetWidth = 4;
-	mAnimationSpeed = 0.2f;
-	mKeyFrameDuration = 0.0f;
-
+	setSpriteSheetWidth(4);
+	setAnimationSpeed(0.2f);
+	
 	//Initiate class variables
-	mNrOfBombs = 1;
+	mNrOfBombs = 4;
 	mLives = 3;
 	mSpeed = 180.0f;
 	mSafe = 0.0f;
@@ -29,7 +24,8 @@ Player::Player(int playerNumber, int inputMode, sf::Vector2f startPosition)
 	increaseRange();
 	encounterBlockReset();
 	
-	mSpriteSheet.setPosition(startPosition);
+	setPosition(startPosition);
+
 }
 
 Player::~Player()
@@ -45,27 +41,23 @@ void Player::update(float dt)
 		// Handle movement input and update direction and animation
 		if (sf::Keyboard::isKeyPressed(mInLeft))
 		{
-			mKeyFrameDuration += dt;
-			mCurrentKeyFrame.y = 1;
+			setCurrentKeyFrameY(1);
 			direction.x += -1.0f * mBlockInDirection[left];	
 			//mBlockInDirection reverses the movement if colliding with block.
 		}
 		if (sf::Keyboard::isKeyPressed(mInRight))
 		{
-			mKeyFrameDuration += dt;
-			mCurrentKeyFrame.y = 2;
+			setCurrentKeyFrameY(2);
 			direction.x += 1.0f * mBlockInDirection[right];
 		}
 		if (sf::Keyboard::isKeyPressed(mInDown))
 		{
-			mKeyFrameDuration += dt;
-			mCurrentKeyFrame.y = 0;
+			setCurrentKeyFrameY(0);
 			direction.y += 1.0f * mBlockInDirection[down];
 		}
 		if (sf::Keyboard::isKeyPressed(mInUp))
 		{
-			mKeyFrameDuration += dt;
-			mCurrentKeyFrame.y = 3;
+			setCurrentKeyFrameY(3);
 			direction.y += -1.0f * mBlockInDirection[up];
 		}
 		if (sf::Keyboard::isKeyPressed(mInBomb) && !mBombWasPressed)
@@ -80,29 +72,20 @@ void Player::update(float dt)
 			direction *= 0.71f;
 		}
 		
-		mSpriteSheet.move(direction * mSpeed * dt);
-
-		// Update animation
-		if (mKeyFrameDuration >= mAnimationSpeed)
-		{
-			mCurrentKeyFrame.x++;
-
-			mCurrentKeyFrame.x %= mSpriteSheetWidth;
-
-			mSpriteSheet.setTextureRect(sf::IntRect(mCurrentKeyFrame.x * mKeyFrameSize.x,
-				mCurrentKeyFrame.y * mKeyFrameSize.y, mKeyFrameSize.x, mKeyFrameSize.y));
-			mKeyFrameDuration = 0.0f;
-		}
+		move(direction * mSpeed * dt);
+		if(direction != sf::Vector2f(0,0))
+			updateAnimation(dt);
 
 		// Update safe mode
 		if (mSafe > 0)
 		{
 			mSafe -= dt;
-			mSpriteSheet.setColor(sf::Color::Red);
+			setColor(sf::Color::Red);
+			
 		}
 		else
 		{
-			mSpriteSheet.setColor(sf::Color::White);
+			setColor(sf::Color::White);
 		}
 		// Update teleport time
 		if (mTeleportTime > 0)
@@ -145,12 +128,12 @@ void Player::takeDamage()
 
 void Player::kill()
 {
-	mSpriteSheet.setPosition(-32, -32);
+	setPosition(-32, -32);
 }
 
 void Player::encounterBlock(int direction)
 {
-	mBlockInDirection[direction] = -1.0f;
+	mBlockInDirection[direction] = -0.02f;
 }
 
 void Player::encounterBlockReset()
@@ -219,26 +202,9 @@ int Player::getNrOfFires() const
 	return mBomb[0].getNrOfFires();
 }
 
-sf::FloatRect Player::getPlayerGlobalBounds(float scale) const
-{
-	sf::FloatRect tempRect = mSpriteSheet.getGlobalBounds();
-	
-	tempRect.top  += tempRect.height * ((1 - scale) / 2);
-	tempRect.left += tempRect.width  * ((1 - scale) / 2);
-	tempRect.height *= scale;
-	tempRect.width  *= scale;
-	return tempRect;
-	
-}
-
 sf::FloatRect Player::getBombGlobalBounds(int index) const
 {
-	return mBomb[index].getBombGlobalBounds();
-}
-
-sf::Sprite& Player::getSprite() 
-{
-	return mSpriteSheet;
+	return mBomb[index].getGlobalBounds();
 }
 
 Fire * Player::getFire(int iBomb, int iFire)
@@ -253,7 +219,7 @@ int Player::getLives() const
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	target.draw(mSpriteSheet, states);
+	target.draw(getSprite(), states);
 	for (int i = 0; i < mNrOfBombs; i++)
 	{
 		target.draw(mBomb[i], states);
@@ -312,25 +278,25 @@ void Player::dropBomb()
 sf::Vector2f Player::getCenteredPosition() const
 {
 	sf::Vector2f centeredPosition(0.0f,0.0f);
-	float fmodPosX = std::fmod(mSpriteSheet.getPosition().x, 32.0f);
-	float fmodPosY = std::fmod(mSpriteSheet.getPosition().y, 32.0f);
+	float fmodPosX = std::fmod(getPosition().x, 32.0f);
+	float fmodPosY = std::fmod(getPosition().y, 32.0f);
 
 	if (fmodPosX <= 16.0f)
 	{
-		centeredPosition.x = mSpriteSheet.getPosition().x - fmodPosX;
+		centeredPosition.x = getPosition().x - fmodPosX;
 	}
 	else
 	{
-		centeredPosition.x = mSpriteSheet.getPosition().x + 32.0f -fmodPosX;
+		centeredPosition.x = getPosition().x + 32.0f -fmodPosX;
 	}
 
 	if (fmodPosY <= 16.0f)
 	{
-		centeredPosition.y = mSpriteSheet.getPosition().y - fmodPosY;
+		centeredPosition.y = getPosition().y - fmodPosY;
 	}
 	else
 	{
-		centeredPosition.y = mSpriteSheet.getPosition().y + 32.0f -fmodPosY;
+		centeredPosition.y = getPosition().y + 32.0f -fmodPosY;
 	}
 	return centeredPosition;
 }

@@ -19,21 +19,21 @@ void Menu::changeColors()
 
 void Menu::moveBackground(float dt)
 {
-	mBackgroundSprite.move(-60 * dt, 100 * dt);
+	move(-60 * dt, 100 * dt);
 
-	if (mBackgroundSprite.getPosition().y > 0)
+	if (getPosition().y > 0)
 	{
-		mBackgroundSprite.move(0, -32);
+		move(0, -32);
 	}
-	if (mBackgroundSprite.getPosition().x < -32)
+	if (getPosition().x < -32)
 	{
-		mBackgroundSprite.move(32, 0);
+		move(32, 0);
 	}
 }
 
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(mBackgroundSprite, states);
+	target.draw(getSprite(), states);
 	for (int i = 0; i < 4; i++)
 	{
 		target.draw(mText[i],states);
@@ -45,9 +45,9 @@ Menu::Menu()
 	mNrOfPlayers = 2;
 	mOutPut = 0;
 	mWinner = -1;
-	mBackgroundTex.loadFromFile("../Resources/background scrolling.jpg");
-	mBackgroundSprite.setTexture(mBackgroundTex);
-	mBackgroundSprite.setPosition(0, -32);
+	setTexture("../Resources/background scrolling.jpg");
+	
+	setPosition(0, -32);
 	mFont.loadFromFile("../Resources/VCR_OSD_MONO_1.001.ttf");
 	for (int i = 0; i < 4; i++)
 	{
