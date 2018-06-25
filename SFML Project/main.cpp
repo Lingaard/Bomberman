@@ -8,10 +8,6 @@ int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	std::cout << sizeof(sf::Sprite) << std::endl;
-	std::cout << sizeof(sf::FloatRect) << std::endl;
-
-
 	srand(static_cast<unsigned int>(time(0)));
 	sf::RenderWindow window(sf::VideoMode(608, 608), "Bomberman vs project");
 
@@ -68,7 +64,6 @@ int main()
 			}
 
 		}
-
 		window.display();
 	}
 }

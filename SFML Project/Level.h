@@ -36,11 +36,8 @@ private:
 	// Functions
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	
-
 	void freeMemory();
 	void initialize();
-
-
 	
 	void expandPickup();
 
@@ -61,14 +58,13 @@ public:
 	void startGame(std::string levelDir, int nrOfPlayers);
 	void loadLevel(std::string levelDir) throw(...);
 	void reset();
-	void updateLiveDisplay(int iPlayer);
+	void updateLifeDisplay(int iPlayer);
 	void findWinner(); // activates on damage to see if game is over 
 	int getWinner()const; // -1 still playing, player ID if winner
 
 	void teleportPlayer(int iPlayer, Teleporter teleporter);
 	void pickupTaken(int iPlayer, int iPickup);
 	void removePickup(int iPickup);
-
 
 	void placePickup(sf::Vector2f position);
 	sf::FloatRect getPickupBoundingBox(int iPickup);
@@ -78,6 +74,5 @@ public:
 	int getNrOfPlayers() const;
 	int getNrOfPickups() const;
 	int getNrOfBlocks() const;
-
 };
 #endif

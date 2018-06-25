@@ -53,15 +53,13 @@ void CollisionHandeler::collideFire(Fire * fire, Level& level)
 
 	if (fire->getBurning()) // Deployed and burning
 	{
-
-
 		for (int i2Player = 0; i2Player < level.getNrOfPlayers(); i2Player++)	// Second player layer
 		{
 			player = level.getPlayer(i2Player);
 			if (tempFireRect.intersects((player)->getGlobalBoundsScaled(0.7f))) // Collision with fire and player
 			{
 				player->takeDamage();
-				level.updateLiveDisplay(i2Player);
+				level.updateLifeDisplay(i2Player);
 				level.findWinner();
 			}
 			for (int i2Bomb = 0; i2Bomb < player->getNrOfBombs(); i2Bomb++)	// Second bomb layer
@@ -214,17 +212,15 @@ void CollisionHandeler::checkCollisionFireFromBarrels(Level& level)
 	}
 }
 
-
 CollisionHandeler::CollisionHandeler()
 {
 }
-
 
 CollisionHandeler::~CollisionHandeler()
 {
 }
 
-void CollisionHandeler::checkCollisions(Level & level)
+void CollisionHandeler::checkAllCollisions(Level & level)
 {
 	// Check collisions
 	for (int iPlayer = 0; iPlayer < level.getNrOfPlayers(); iPlayer++)

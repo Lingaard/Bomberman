@@ -23,11 +23,7 @@ public:
 	sf::FloatRect getGlobalBoundsScaled(float scale = 0.9f) const;
 	const sf::Sprite& getSprite() const;
 
-
-	void move(const sf::Vector2f& offset);
-	void move(float offsetX, float offsetY);
+	void moveSprite(const sf::Vector2f& offset);
+	void moveSprite(float offsetX, float offsetY);
 };
-
-
-
 #endif // !GRAPHICS_H

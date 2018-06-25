@@ -43,8 +43,7 @@ void Bomb::increaseRange()
 		if (i % 2 == 1)
 			mFires[i] = new Fire(Fire::horisontal);
 		else
-			mFires[i] = new Fire(Fire::vertical);
-		
+			mFires[i] = new Fire(Fire::vertical);		
 	}
 }
 
@@ -64,15 +63,13 @@ Bomb::Bomb()
 	mFires[3] = new Fire(Fire::right);
 	mFires[4] = new Fire(Fire::bottom);
 
-
 	setPosition(-32, -32);
 	setTexture("../Resources/Bomb.png");
 	setTextureRect(sf::IntRect(0, 0, 32, 32));
 	
 	// Initialise animation variables.
 	setSpriteSheetWidth(4); 
-	setAnimationSpeed(mFuseTime / 7);
-	
+	setAnimationSpeed(mFuseTime / 7);	
 }
 
 Bomb::~Bomb()
@@ -181,7 +178,6 @@ bool Bomb::dropBomb(sf::Vector2f position)
 		mCoolDown = mFuseTime + mFires[0]->getDuration() + 0.2f;
 		prepExplode(position);
 	}
-
 	return dropSuccessful;
 }
 

@@ -9,7 +9,6 @@ Graphics::Graphics()
 {
 }
 
-
 Graphics::~Graphics()
 {
 }
@@ -66,14 +65,12 @@ const sf::Sprite & Graphics::getSprite() const
 	return mSprite;
 }
 
-
-
-void Graphics::move(const sf::Vector2f & offset)
+void Graphics::moveSprite(const sf::Vector2f & offset)
 {
 	mSprite.move(offset);
 }
 
-void Graphics::move(float offsetX, float offsetY)
+void Graphics::moveSprite(float offsetX, float offsetY)
 {
 	mSprite.move(offsetX, offsetY);
 }

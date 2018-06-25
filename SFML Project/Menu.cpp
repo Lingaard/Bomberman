@@ -19,15 +19,15 @@ void Menu::changeColors()
 
 void Menu::moveBackground(float dt)
 {
-	move(-60 * dt, 100 * dt);
+	moveSprite(-60 * dt, 100 * dt);
 
 	if (getPosition().y > 0)
 	{
-		move(0, -32);
+		moveSprite(0, -32);
 	}
 	if (getPosition().x < -32)
 	{
-		move(32, 0);
+		moveSprite(32, 0);
 	}
 }
 
@@ -52,7 +52,7 @@ Menu::Menu()
 	for (int i = 0; i < 4; i++)
 	{
 		mText[i].setCharacterSize(40);
-		mText[i].setPosition(250, 250 + i * 50);
+		mText[i].setPosition(250.0f, 250.0f + i * 50);
 		mText[i].setFont(mFont);
 	}
 	mText[nrOfPlayers].setPosition(80, 250);

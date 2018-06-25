@@ -173,7 +173,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="BombAndFireHandeler.cpp" />
     <ClCompile Include="CollisionHandeler.cpp" />
     <ClCompile Include="Crate.cpp" />
     <ClCompile Include="Fire.cpp">
@@ -183,7 +182,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -201,14 +199,12 @@
     <ClInclude Include="Barrel.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bomb.h" />
-    <ClInclude Include="BombAndFireHandeler.h" />
     <ClInclude Include="CollisionHandeler.h" />
     <ClInclude Include="Crate.h" />
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Menu.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

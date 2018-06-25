@@ -44,7 +44,7 @@ public:
 	int getLives()const;
 	bool isAlive()const;
 	bool canTeleport() const;	
-	sf::FloatRect getBombGlobalBounds(int index)const; //
+	sf::FloatRect getBombGlobalBounds(int index)const; 
 	
 	Fire* getFire(int iBomb, int iFire);
 	 

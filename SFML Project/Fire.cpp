@@ -80,7 +80,7 @@ void Fire::prepFire(sf::Vector2f position)
 	setPosition(position);
 }
 
-void Fire::prepFire(int xPos, int yPos)
+void Fire::prepFire(float xPos, float yPos)
 {
 	prepFire(sf::Vector2f(xPos, yPos));
 }

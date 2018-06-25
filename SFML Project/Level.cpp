@@ -132,7 +132,6 @@ int Level::getNrOfBlocks() const
 }
 
 
-
 void Level::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	target.draw(getSprite(), states);
@@ -152,12 +151,6 @@ void Level::draw(sf::RenderTarget &target, sf::RenderStates states) const
 		target.draw(mLives[i]);
 	}
 }
-
-
-
-
-
-
 
 int Level::getWinner() const
 {
@@ -237,8 +230,6 @@ sf::FloatRect Level::getPickupBoundingBox(int iPickup)
 {
 	return mPickups[iPickup]->getGlobalBounds();
 }
-
-
 
 void Level::addWall()
 {
@@ -324,7 +315,7 @@ void Level::reset()
 	initialize();
 }
 
-void Level::updateLiveDisplay(int iPlayer)
+void Level::updateLifeDisplay(int iPlayer)
 {
 	mLives[iPlayer].setString(std::to_string(mPlayer[iPlayer]->getLives()));
 }

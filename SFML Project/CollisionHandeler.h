@@ -15,13 +15,10 @@ private:
 	void checkCollisionFireFromPlayer(int iPlayer, Level& level);
 	void checkCollisionFireFromBarrels(Level& level);
 
-
 public:
 	CollisionHandeler();
-	~CollisionHandeler();
+	virtual~CollisionHandeler();
 
-
-	void checkCollisions(Level& level);
+	void checkAllCollisions(Level& level);
 };
-
 #endif // !COLLISIONHANDELER_H

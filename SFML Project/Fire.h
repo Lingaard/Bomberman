@@ -28,7 +28,7 @@ public:
 	bool getBlockDestroyer()const;
 	bool ignite();
 	void prepFire(sf::Vector2f position);
-	void prepFire(int xPos, int yPos); 
+	void prepFire(float xPos, float yPos); 
 	void setPart(Part part);
 	void encounterBlock(bool isOnBlock);
 };

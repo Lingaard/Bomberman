@@ -19,10 +19,15 @@ sf::Vector2f Teleporter::getPosition() const
 sf::Vector2f Teleporter::teleport(sf::Vector2f telePosArr[], int arrLen)
 {
 	int destination;
-	do  // Find a teleporter other than this one
+	if (arrLen != 1)
 	{
-		destination = rand() % arrLen;
-	} while (telePosArr[destination] == getPosition());
+		do  // Find a teleporter other than this one
+		{
+			destination = rand() % arrLen;
+		} while (telePosArr[destination] == getPosition());
+	}
+	else
+		destination = 0;
 	return telePosArr[destination];
 }
 

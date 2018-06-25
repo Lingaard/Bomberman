@@ -12,7 +12,7 @@ Player::Player(int playerNumber, int inputMode, sf::Vector2f startPosition)
 	setAnimationSpeed(0.2f);
 	
 	//Initiate class variables
-	mNrOfBombs = 4;
+	mNrOfBombs = 1;
 	mLives = 3;
 	mSpeed = 180.0f;
 	mSafe = 0.0f;
@@ -25,7 +25,6 @@ Player::Player(int playerNumber, int inputMode, sf::Vector2f startPosition)
 	encounterBlockReset();
 	
 	setPosition(startPosition);
-
 }
 
 Player::~Player()
@@ -72,8 +71,8 @@ void Player::update(float dt)
 			direction *= 0.71f;
 		}
 		
-		move(direction * mSpeed * dt);
-		if(direction != sf::Vector2f(0,0))
+		moveSprite(direction * mSpeed * dt);
+		if (direction != sf::Vector2f(0, 0))
 			updateAnimation(dt);
 
 		// Update safe mode
